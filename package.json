@@ -1,0 +1,25 @@
+{
+  "name": "scriptloader-component",
+  "version": "0.0.1",
+  "description": "A React Component for reacting to scripts loading.",
+  "main": "index.js",
+  "scripts": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/WTW-IM/scriptloader-component.git"
+  },
+  "keywords": [
+    "react",
+    "component",
+    "script",
+    "onload"
+  ],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/WTW-IM/scriptloader-component/issues"
+  },
+  "homepage": "https://github.com/WTW-IM/scriptloader-component#readme"
+}
