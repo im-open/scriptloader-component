@@ -1,7 +1,13 @@
-import React, { useEffect, useCallback, ReactElement } from "react";
+import React, {
+  useEffect,
+  useCallback,
+  useContext,
+  useMemo,
+  createContext,
+} from "react";
 import {
   getFromWindowCache,
-  addScriptToCache,
+  updateCachedScript,
   CachedScript,
 } from "./scriptCache";
 import useSafeState from "./hooks/useSafeState";
@@ -11,6 +17,16 @@ interface ScriptLoaderFunction extends React.FC<ScriptLoaderProps> {
   Failed: React.FC;
   Loading: React.FC;
 }
+
+type ScriptLoaderStatus = "loading" | "succeeded" | "failed";
+
+interface ScriptLoaderContextShape {
+  loaderStatus: ScriptLoaderStatus;
+}
+
+const ScriptLoaderContext = createContext<ScriptLoaderContextShape>({
+  loaderStatus: "loading",
+});
 
 const noop = () => {
   //intentionally empty
@@ -26,75 +42,93 @@ const ScriptLoader: ScriptLoaderFunction = ({
   source,
   onSuccess = noop,
   onError = noop,
-  children,
+  ...props
 }) => {
-  const [statusChildType, setStatusChildType] = useSafeState<React.FC>(
-    () => Loading
-  );
+  const [isSucceeded, setIsSucceeded] = useSafeState(false);
+  const [isFailed, setIsFailed] = useSafeState(false);
+  const loaderStatus = useMemo<ScriptLoaderStatus>(() => {
+    if (isSucceeded) return "succeeded";
+    if (isFailed) return "failed";
+    return "loading";
+  }, [isSucceeded, isFailed]);
 
   const setStateFromCachedScript = useCallback(
-    (cachedScript: CachedScript) => {
-      if (!cachedScript.loading) {
-        if (cachedScript.failed) {
-          setStatusChildType(() => Failed);
-          onError();
-        } else {
-          setStatusChildType(() => Success);
-          onSuccess();
-        }
-      }
+    ({ loading, failed }: CachedScript) => {
+      setIsSucceeded(!loading && !failed);
+      setIsFailed(failed);
     },
-    [setStatusChildType, onError, onSuccess]
-  );
-
-  const setStateFromEvent = useCallback(
-    (event: Event) => {
-      const cachedScript = getFromWindowCache(source);
-      if (event.type === "load") {
-        cachedScript.loading = false;
-      } else if (event.type === "error") {
-        cachedScript.loading = false;
-        cachedScript.failed = true;
-      }
-      setStateFromCachedScript(cachedScript);
-      event.target?.removeEventListener("load", setStateFromEvent);
-      event.target?.removeEventListener("error", setStateFromEvent);
-    },
-    [setStateFromCachedScript, source]
+    []
   );
 
   useEffect(() => {
-    const cachedScript = getFromWindowCache(source);
-    if (cachedScript) {
-      setTimeout(() => setStateFromCachedScript(cachedScript), 600);
+    setStateFromCachedScript(getFromWindowCache(source));
+  }, [source]);
+
+  useEffect(() => {
+    if (loaderStatus === "succeeded") onSuccess();
+    if (loaderStatus === "failed") onError();
+  }, [loaderStatus]);
+
+  useEffect(() => {
+    const removeListeners = () => {
+      scriptRef.removeEventListener("load", loadEvent);
+      scriptRef.removeEventListener("error", errorEvent);
+    };
+    const updateScript = (cachedScript: Partial<CachedScript>) => {
+      const newCachedScript = updateCachedScript(source, {
+        ...getFromWindowCache(source),
+        ...cachedScript,
+      });
+      setStateFromCachedScript(newCachedScript);
+      removeListeners();
+    };
+    const loadEvent = () =>
+      updateScript({
+        loading: false,
+        failed: false,
+      });
+    const errorEvent = () =>
+      updateScript({
+        loading: false,
+        failed: true,
+      });
+
+    if (document.querySelector(`script[src="${source}"]`)) {
+      if (!getFromWindowCache(source).scriptCreated) {
+        // if we did not create the script, assume it has loaded
+        loadEvent();
+      }
       return;
     }
 
     const scriptRef = document.createElement("script");
     scriptRef.async = true;
     scriptRef.src = source;
-    scriptRef.addEventListener("load", setStateFromEvent);
-    scriptRef.addEventListener("error", setStateFromEvent);
+    scriptRef.addEventListener("load", loadEvent);
+    scriptRef.addEventListener("error", errorEvent);
     document.body.appendChild(scriptRef);
-    addScriptToCache(source);
-  }, [source, setStateFromCachedScript, setStateFromEvent]);
 
-  const finalChildren = React.Children.map(children, (child) =>
-    (child as ReactElement)?.type === statusChildType ? child : null
-  );
-  return <>{finalChildren}</>;
+    updateCachedScript(source, { scriptCreated: true });
+
+    return removeListeners;
+  }, [source, setStateFromCachedScript]);
+
+  return <ScriptLoaderContext.Provider value={{ loaderStatus }} {...props} />;
 };
 
-const Success: React.FC = ({ children } = { children: null }) => {
-  return <>{children}</>;
+const Success: React.FC = ({ children }) => {
+  const { loaderStatus } = useContext(ScriptLoaderContext);
+  return loaderStatus === "succeeded" ? <>{children}</> : <></>;
 };
 
-const Failed: React.FC = ({ children } = { children: null }) => {
-  return <>{children}</>;
+const Failed: React.FC = ({ children }) => {
+  const { loaderStatus } = useContext(ScriptLoaderContext);
+  return loaderStatus === "failed" ? <>{children}</> : <></>;
 };
 
-const Loading: React.FC = ({ children } = { children: null }) => {
-  return <>{children}</>;
+const Loading: React.FC = ({ children }) => {
+  const { loaderStatus } = useContext(ScriptLoaderContext);
+  return loaderStatus === "loading" ? <>{children}</> : <></>;
 };
 
 ScriptLoader.Success = Success;
