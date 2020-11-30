@@ -1,17 +1,37 @@
+const baseExtends = [
+  "eslint:recommended",
+  "plugin:react/recommended",
+  "plugin:react-hooks/recommended",
+];
+const basePlugins = ["react", "react-hooks"];
+
+const tsExtends = [
+  ...baseExtends,
+  "plugin:@typescript-eslint/eslint-recommended",
+  "plugin:@typescript-eslint/recommended",
+  "plugin:@typescript-eslint/recommended-requiring-type-checking",
+];
+const tsPlugins = ["@typescript-eslint", ...basePlugins];
+
+const testExtends = [
+  ...tsExtends,
+  "plugin:jest/recommended",
+  "plugin:jest-dom/recommended",
+];
+const testPlugins = [...tsPlugins, "jest", "jest-dom"];
+
 module.exports = {
   root: true,
-  plugins: ["react", "react-hooks"],
+  plugins: basePlugins,
   settings: {
     react: {
       version: "detect",
     },
   },
-  extends: [
-    "eslint:recommended",
-    "plugin:react/recommended",
-    "plugin:react-hooks/recommended",
-  ],
+  extends: baseExtends,
   ignorePatterns: ["dist/**/*"],
+  env: { es6: true },
+  parserOptions: { ecmaVersion: 2017 },
   overrides: [
     {
       files: ["src/**/*", "./index.ts", "./jest.config.ts"],
@@ -19,15 +39,8 @@ module.exports = {
       parserOptions: {
         project: "./tsconfig.json",
       },
-      plugins: ["@typescript-eslint", "react", "react-hooks"],
-      extends: [
-        "eslint:recommended",
-        "plugin:react/recommended",
-        "plugin:react-hooks/recommended",
-        "plugin:@typescript-eslint/eslint-recommended",
-        "plugin:@typescript-eslint/recommended",
-        "plugin:@typescript-eslint/recommended-requiring-type-checking",
-      ],
+      plugins: tsPlugins,
+      extends: tsExtends,
       rules: {
         "@typescript-eslint/no-empty-interface": 0,
       },
@@ -44,24 +57,9 @@ module.exports = {
     },
     {
       files: ["./test/*"],
-      plugins: [
-        "@typescript-eslint",
-        "react",
-        "react-hooks",
-        "jest",
-        "jest-dom",
-      ],
+      plugins: testPlugins,
       env: { "jest/globals": true },
-      extends: [
-        "eslint:recommended",
-        "plugin:react/recommended",
-        "plugin:react-hooks/recommended",
-        "plugin:@typescript-eslint/eslint-recommended",
-        "plugin:@typescript-eslint/recommended",
-        "plugin:@typescript-eslint/recommended-requiring-type-checking",
-        "plugin:jest/recommended",
-        "plugin:jest-dom/recommended",
-      ],
+      extends: testExtends,
       parser: "@typescript-eslint/parser",
       parserOptions: {
         project: "./test/tsconfig.json",
