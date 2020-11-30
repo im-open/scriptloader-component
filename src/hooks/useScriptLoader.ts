@@ -15,13 +15,13 @@ const getNewScript = (source: string): HTMLScriptElement => {
   return newScript;
 };
 
-interface ScriptLoaderConfiguration {
+export interface ScriptLoaderConfiguration {
   onSuccess: () => void;
   onFailure: (err: ErrorEvent) => void;
   source: string;
 }
 
-interface ScriptLoader {
+export interface ScriptLoader {
   (config: ScriptLoaderConfiguration): void;
 }
 
