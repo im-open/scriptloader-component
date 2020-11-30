@@ -109,6 +109,9 @@ const useScriptLoader: ScriptLoader = (config) => {
         return;
       }
 
+      // if we are not loading, do nothing
+      if (!cachedScriptInfo.loading) return;
+
       // if we are loading and we did create the script, listen
       return setupListeners(scriptRef);
     }
