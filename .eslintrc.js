@@ -28,6 +28,9 @@ module.exports = {
         "plugin:@typescript-eslint/recommended",
         "plugin:@typescript-eslint/recommended-requiring-type-checking",
       ],
+      rules: {
+        "@typescript-eslint/no-empty-interface": 0,
+      },
     },
     {
       files: "**/*.ts?(x)",

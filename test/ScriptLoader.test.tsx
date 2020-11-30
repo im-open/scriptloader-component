@@ -199,6 +199,7 @@ describe("failure", () => {
     });
 
     await waitFor<void>(() => expect(errorFunc).toHaveBeenCalledTimes(1));
+    expect(errorFunc).toHaveBeenCalledWith(expect.any(Event));
     expect(successFunc).not.toHaveBeenCalled();
   });
 
@@ -215,7 +216,7 @@ describe("failure", () => {
     expect(await screen.findByText("Oh no!")).toBeInTheDocument();
   });
 
-  it("calls onError if the script already failed", async () => {
+  it("calls onError with the failureEvent if the script already failed", async () => {
     // initial load
     renderLoader({ source: testFileLocation });
     expect(await screen.findByText("Failed :(")).toBeInTheDocument();
@@ -233,6 +234,7 @@ describe("failure", () => {
     );
 
     await waitFor<void>(() => expect(errorFunc).toHaveBeenCalledTimes(1));
+    expect(errorFunc).toHaveBeenCalledWith(expect.any(Event));
     expect(successFunc).not.toHaveBeenCalled();
   });
 });
