@@ -3,6 +3,7 @@
     "allowJs": true,
     "allowSyntheticDefaultImports": true,
     "declaration": true,
+    "downlevelIteration": true,
     "esModuleInterop": true,
     "outDir": "./dist",
     "jsx": "react",
@@ -11,5 +12,5 @@
     "moduleResolution": "node",
     "typeRoots": ["node_modules/@types"]
   },
-  "include": ["src", "./index.ts"]
+  "include": ["src", "./index.ts", "./jest.config.ts"]
 }

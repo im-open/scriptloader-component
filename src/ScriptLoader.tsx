@@ -12,7 +12,7 @@ import {
 } from "./scriptCache";
 import useSafeState from "./hooks/useSafeState";
 
-interface ScriptLoaderFunction extends React.FC<ScriptLoaderProps> {
+export interface ScriptLoaderFunction extends React.FC<ScriptLoaderProps> {
   Success: React.FC;
   Failed: React.FC;
   Loading: React.FC;
@@ -32,7 +32,14 @@ const noop = () => {
   //intentionally empty
 };
 
-interface ScriptLoaderProps {
+const getNewScript = (source: string): HTMLScriptElement => {
+  const newScript = document.createElement("script");
+  newScript.async = true;
+  newScript.setAttribute("src", source);
+  return newScript;
+};
+
+export interface ScriptLoaderProps {
   source: string;
   onError?: () => void;
   onSuccess?: () => void;
@@ -57,61 +64,84 @@ const ScriptLoader: ScriptLoaderFunction = ({
       setIsSucceeded(!loading && !failed);
       setIsFailed(failed);
     },
-    []
+    [setIsFailed, setIsSucceeded]
+  );
+
+  const setUpdatedScriptState = useCallback(
+    (scriptUpdate: Partial<CachedScript>) => {
+      const newCachedScript = updateCachedScript(source, {
+        ...getFromWindowCache(source),
+        ...scriptUpdate,
+      });
+      setStateFromCachedScript(newCachedScript);
+    },
+    [source, setStateFromCachedScript]
   );
 
   useEffect(() => {
     setStateFromCachedScript(getFromWindowCache(source));
-  }, [source]);
+  }, [source, setStateFromCachedScript]);
 
   useEffect(() => {
     if (loaderStatus === "succeeded") onSuccess();
     if (loaderStatus === "failed") onError();
-  }, [loaderStatus]);
+  }, [loaderStatus, onSuccess, onError]);
+
+  const setupListeners = useCallback(
+    (scriptRef: HTMLScriptElement): (() => void) => {
+      const removeListeners = () => {
+        scriptRef.removeEventListener("load", loadEvent);
+        scriptRef.removeEventListener("error", errorEvent);
+      };
+      const loadEvent = () => {
+        setUpdatedScriptState({
+          loading: false,
+          failed: false,
+        });
+        removeListeners();
+      };
+      const errorEvent = () => {
+        setUpdatedScriptState({
+          loading: false,
+          failed: true,
+        });
+        removeListeners();
+      };
+      scriptRef.addEventListener("load", loadEvent);
+      scriptRef.addEventListener("error", errorEvent);
+      return removeListeners;
+    },
+    [setUpdatedScriptState]
+  );
 
   useEffect(() => {
-    const removeListeners = () => {
-      scriptRef.removeEventListener("load", loadEvent);
-      scriptRef.removeEventListener("error", errorEvent);
-    };
-    const updateScript = (cachedScript: Partial<CachedScript>) => {
-      const newCachedScript = updateCachedScript(source, {
-        ...getFromWindowCache(source),
-        ...cachedScript,
-      });
-      setStateFromCachedScript(newCachedScript);
-      removeListeners();
-    };
-    const loadEvent = () =>
-      updateScript({
-        loading: false,
-        failed: false,
-      });
-    const errorEvent = () =>
-      updateScript({
-        loading: false,
-        failed: true,
-      });
+    let scriptRef = document.querySelector<HTMLScriptElement>(
+      `script[src="${source}"]`
+    );
+    const scriptExists = Boolean(scriptRef);
 
-    if (document.querySelector(`script[src="${source}"]`)) {
-      if (!getFromWindowCache(source).scriptCreated) {
+    if (scriptExists) {
+      const cachedScriptInfo = getFromWindowCache(source);
+      if (!cachedScriptInfo.scriptCreated) {
         // if we did not create the script, assume it has loaded
-        loadEvent();
+        setUpdatedScriptState({
+          loading: false,
+          failed: false,
+        });
+        return;
+      } else if (!cachedScriptInfo.loading) {
+        // if we are not loading, we already have a script state
+        return;
       }
-      return;
+      return setupListeners(scriptRef);
     }
-
-    const scriptRef = document.createElement("script");
-    scriptRef.async = true;
-    scriptRef.src = source;
-    scriptRef.addEventListener("load", loadEvent);
-    scriptRef.addEventListener("error", errorEvent);
+    scriptRef = getNewScript(source);
+    updateCachedScript(source, { scriptCreated: true });
+    const removeListeners = setupListeners(scriptRef);
     document.body.appendChild(scriptRef);
 
-    updateCachedScript(source, { scriptCreated: true });
-
     return removeListeners;
-  }, [source, setStateFromCachedScript]);
+  }, [source, setStateFromCachedScript, setUpdatedScriptState, setupListeners]);
 
   return <ScriptLoaderContext.Provider value={{ loaderStatus }} {...props} />;
 };
