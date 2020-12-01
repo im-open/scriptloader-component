@@ -1,4 +1,5 @@
 module.exports = {
+  branches: ["main"],
   repositoryUrl: "git@github.com:WTW-IM/scriptloader-component.git",
   plugins: [
     [
