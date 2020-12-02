@@ -1,3 +1,19 @@
+# [1.1.0](https://github.com/WTW-IM/scriptloader-component/compare/v1.0.0...v1.1.0) (2020-12-02)
+
+
+### Build
+
+* ensuring we skip builds on [skip ci] commits ([e2fb21c](https://github.com/WTW-IM/scriptloader-component/commit/e2fb21c9734b697fd38b1079c15a897456b26149))
+* updating commitlint to match conventional-changelog-eslint ([92d6bf1](https://github.com/WTW-IM/scriptloader-component/commit/92d6bf108ffe02380a974dc6a0749b9fed06ca55))
+
+### Chore
+
+* moving script updater lookup to a function ([3a4ebe0](https://github.com/WTW-IM/scriptloader-component/commit/3a4ebe02f05560e32bbdc1c44cba450687836312))
+
+### Update
+
+* renaming getScriptUpdaters to getCachedScriptUpdaters ([8634054](https://github.com/WTW-IM/scriptloader-component/commit/86340541a4624394359fae46dd69a7a390dec7b5))
+
 # 1.0.0 (2020-12-02)
 
 
