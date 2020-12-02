@@ -41,7 +41,7 @@ Object.defineProperty(window, "__loadedScriptsUpdaters", {
       window.__loadedScriptsUpdatersInternal || {}),
 });
 
-const getScriptUpdaters = (url: string): CachedScriptUpdater[] =>
+const getCahcedScriptUpdaters = (url: string): CachedScriptUpdater[] =>
   (window.__loadedScriptsUpdaters[url] =
     window.__loadedScriptsUpdaters[url] || []);
 
@@ -63,7 +63,7 @@ export function updateCachedScript(
     ...updatedScript,
   });
 
-  getScriptUpdaters(url).forEach((updater) => updater(newScript));
+  getCahcedScriptUpdaters(url).forEach((updater) => updater(newScript));
 
   return newScript;
 }
@@ -72,14 +72,17 @@ export function addScriptUpdater(
   url: string,
   updater: CachedScriptUpdater
 ): void {
-  window.__loadedScriptsUpdaters[url] = [...getScriptUpdaters(url), updater];
+  window.__loadedScriptsUpdaters[url] = [
+    ...getCahcedScriptUpdaters(url),
+    updater,
+  ];
 }
 
 export function removeScriptUpdater(
   url: string,
   updater: CachedScriptUpdater
 ): void {
-  window.__loadedScriptsUpdaters[url] = getScriptUpdaters(url).filter(
+  window.__loadedScriptsUpdaters[url] = getCahcedScriptUpdaters(url).filter(
     (currentUpdater) => currentUpdater !== updater
   );
 }
