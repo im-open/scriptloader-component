@@ -1,3 +1,10 @@
+# [1.2.0](https://github.com/WTW-IM/scriptloader-component/compare/v1.1.1...v1.2.0) (2020-12-02)
+
+
+### Update
+
+* exporting ScripLoader as default from root file ([b3ae460](https://github.com/WTW-IM/scriptloader-component/commit/b3ae460a066f64f89c5de7a0f0cc893a3134d7a5))
+
 ## [1.1.1](https://github.com/WTW-IM/scriptloader-component/compare/v1.1.0...v1.1.1) (2020-12-02)
 
 
