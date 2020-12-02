@@ -27,7 +27,7 @@
     }
   },
   "lint-staged": {
-    "src/**/*.(j|t)s?(x)": [
+    "*.(j|t)s?(x)": [
       "prettier --write",
       "eslint --fix"
     ],
