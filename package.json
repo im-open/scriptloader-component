@@ -2,9 +2,11 @@
   "name": "scriptloader-component",
   "version": "1.2.0",
   "description": "A React Component for reacting to scripts loading.",
-  "main": "./dist/index.js",
-  "types": "./dist/index.d.ts",
-  "files": "dist",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "test": "eslint --quiet . && tsc --noEmit --project ./tsconfig.json && jest",
     "build": "tsc --project ./tsconfig.json"
