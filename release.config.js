@@ -1,3 +1,5 @@
+const defaultReleaseRules = require("@semantic-release/commit-analyzer/lib/default-release-rules");
+
 module.exports = {
   branches: ["main"],
   repositoryUrl: "git@github.com:WTW-IM/scriptloader-component.git",
@@ -7,8 +9,9 @@ module.exports = {
       {
         preset: "eslint",
         releaseRules: [
-          { type: "refactor", release: "patch" },
-          { type: "patch", release: "patch" },
+          ...defaultReleaseRules,
+          { tag: "Refactor", release: "patch" },
+          { tag: "Patch", release: "patch" },
         ],
       },
     ],
