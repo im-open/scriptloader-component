@@ -6,6 +6,10 @@ module.exports = {
       "@semantic-release/commit-analyzer",
       {
         preset: "eslint",
+        releaseRules: [
+          { type: "refactor", release: "patch" },
+          { type: "patch", release: "patch" },
+        ],
       },
     ],
     [
