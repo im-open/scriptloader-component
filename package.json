@@ -9,7 +9,8 @@
   ],
   "scripts": {
     "test": "eslint --quiet . && tsc --noEmit --project ./tsconfig.json && jest",
-    "build": "tsc --project ./tsconfig.json"
+    "build": "tsc --project ./tsconfig.json",
+    "prepack": "npm run build"
   },
   "repository": {
     "type": "git",
