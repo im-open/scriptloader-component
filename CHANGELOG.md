@@ -1,3 +1,18 @@
+## [1.1.1](https://github.com/WTW-IM/scriptloader-component/compare/v1.1.0...v1.1.1) (2020-12-02)
+
+
+### Build
+
+* adding some extra tags for conventional commits ([57af2f7](https://github.com/WTW-IM/scriptloader-component/commit/57af2f72ab1f64df1da1937019f219c6c6e00372))
+* allowing for other patch type commits ([3c7ce28](https://github.com/WTW-IM/scriptloader-component/commit/3c7ce285ccc4fd4bb33a28c57666cb57d9f57ad9))
+* ensuring we checkout files before other jobs ([54a8452](https://github.com/WTW-IM/scriptloader-component/commit/54a8452c7e650bc77c0b68b8e3e8f903a9273350))
+* removing needs from test in npm-publish ([45f4afe](https://github.com/WTW-IM/scriptloader-component/commit/45f4afe446cde7f87f6b38a231a42f2490f0bdf8))
+* running test before release ([a7d8c4a](https://github.com/WTW-IM/scriptloader-component/commit/a7d8c4a3a032e31b11b8ba37784e9d8c7eab6652))
+
+### Refactor
+
+* creating a default cached script ([e29e5cb](https://github.com/WTW-IM/scriptloader-component/commit/e29e5cbaee8f61333e7806824f7c5af76bf16705))
+
 # [1.1.0](https://github.com/WTW-IM/scriptloader-component/compare/v1.0.0...v1.1.0) (2020-12-02)
 
 
