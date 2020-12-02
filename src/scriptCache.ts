@@ -7,6 +7,14 @@ declare global {
   }
 }
 
+export interface CachedScript {
+  url: string;
+  loading: boolean;
+  failed: boolean;
+  scriptCreated: boolean;
+  failureEvent?: ErrorEvent;
+}
+
 type CachedScriptUpdater = {
   (script: CachedScript): void;
 };
@@ -17,14 +25,6 @@ interface CachedScriptsUpdaters {
 
 interface CachedScripts {
   [key: string]: CachedScript;
-}
-
-export interface CachedScript {
-  url: string;
-  loading: boolean;
-  failed: boolean;
-  scriptCreated: boolean;
-  failureEvent?: ErrorEvent;
 }
 
 Object.defineProperty(window, "__loadedScripts", {
@@ -41,16 +41,20 @@ Object.defineProperty(window, "__loadedScriptsUpdaters", {
       window.__loadedScriptsUpdatersInternal || {}),
 });
 
+const defaultCachedScript = {
+  loading: true,
+  failed: false,
+  scriptCreated: false,
+};
+
 const getCahcedScriptUpdaters = (url: string): CachedScriptUpdater[] =>
   (window.__loadedScriptsUpdaters[url] =
     window.__loadedScriptsUpdaters[url] || []);
 
 export function getFromWindowCache(url: string): CachedScript {
   return (window.__loadedScripts[url] = window.__loadedScripts[url] || {
+    ...defaultCachedScript,
     url,
-    loading: true,
-    failed: false,
-    scriptCreated: false,
   });
 }
 
