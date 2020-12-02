@@ -1,3 +1,10 @@
+## [1.2.1](https://github.com/WTW-IM/scriptloader-component/compare/v1.2.0...v1.2.1) (2020-12-02)
+
+
+### Fix
+
+* correcting package.json files ([0a9ec94](https://github.com/WTW-IM/scriptloader-component/commit/0a9ec94b3623bf80a2c9b4e0a754e425fcb2e6ea))
+
 # [1.2.0](https://github.com/WTW-IM/scriptloader-component/compare/v1.1.1...v1.2.0) (2020-12-02)
 
 
