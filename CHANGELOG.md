@@ -1,3 +1,10 @@
+## [1.2.2](https://github.com/WTW-IM/scriptloader-component/compare/v1.2.1...v1.2.2) (2020-12-02)
+
+
+### Fix
+
+* ensuring dist is always built before pack/publish ([808a5ff](https://github.com/WTW-IM/scriptloader-component/commit/808a5ff0cc4cdfdddf0ed1e570ebab9c4b6b06d3))
+
 ## [1.2.1](https://github.com/WTW-IM/scriptloader-component/compare/v1.2.0...v1.2.1) (2020-12-02)
 
 
