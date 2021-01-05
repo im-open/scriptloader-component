@@ -27,19 +27,23 @@ interface CachedScripts {
   [key: string]: CachedScript;
 }
 
-Object.defineProperty(window, "__loadedScripts", {
-  set: (value: CachedScripts) => (window.__loadedScriptsInternal = value),
-  get: () =>
-    (window.__loadedScriptsInternal = window.__loadedScriptsInternal || {}),
-});
+if (!Object.prototype.hasOwnProperty.call(window, "__loadedScripts")) {
+  Object.defineProperty(window, "__loadedScripts", {
+    set: (value: CachedScripts) => (window.__loadedScriptsInternal = value),
+    get: () =>
+      (window.__loadedScriptsInternal = window.__loadedScriptsInternal || {}),
+  });
+}
 
-Object.defineProperty(window, "__loadedScriptsUpdaters", {
-  set: (value: CachedScriptsUpdaters) =>
-    (window.__loadedScriptsUpdatersInternal = value),
-  get: () =>
-    (window.__loadedScriptsUpdatersInternal =
-      window.__loadedScriptsUpdatersInternal || {}),
-});
+if (!Object.prototype.hasOwnProperty.call(window, "__loadedScriptsUpdaters")) {
+  Object.defineProperty(window, "__loadedScriptsUpdaters", {
+    set: (value: CachedScriptsUpdaters) =>
+      (window.__loadedScriptsUpdatersInternal = value),
+    get: () =>
+      (window.__loadedScriptsUpdatersInternal =
+        window.__loadedScriptsUpdatersInternal || {}),
+  });
+}
 
 const defaultCachedScript = {
   loading: true,
