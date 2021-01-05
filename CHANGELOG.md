@@ -1,3 +1,14 @@
+# [1.3.0](https://github.com/WTW-IM/scriptloader-component/compare/v1.2.2...v1.3.0) (2021-01-05)
+
+
+### Fix
+
+* ensuring we only define window properties once ([35fb37c](https://github.com/WTW-IM/scriptloader-component/commit/35fb37ce7a77654bb8473b629a9927aa699918fc))
+
+### Update
+
+* exporting useScriptLoader appropriately ([ecd0e06](https://github.com/WTW-IM/scriptloader-component/commit/ecd0e06df547f0a18700e14e828dc4e0062abbed))
+
 ## [1.2.2](https://github.com/WTW-IM/scriptloader-component/compare/v1.2.1...v1.2.2) (2020-12-02)
 
 
