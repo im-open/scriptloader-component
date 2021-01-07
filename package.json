@@ -3,9 +3,14 @@
   "version": "1.3.0",
   "description": "A React Component for reacting to scripts loading.",
   "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "exports": {
+    ".": "./dist/index.js",
+    "./scriptloader-support": "./dist/scriptloader-support/index.js"
+  },
   "files": [
-    "dist"
+    "dist",
+    "src",
+    "scriptloader-support"
   ],
   "scripts": {
     "test": "eslint --quiet . && tsc --noEmit --project ./tsconfig.json && jest",
