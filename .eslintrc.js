@@ -31,7 +31,7 @@ module.exports = {
   extends: baseExtends,
   ignorePatterns: ["dist/**/*"],
   env: { es6: true },
-  parserOptions: { ecmaVersion: 2017 },
+  parserOptions: { ecmaVersion: 2021, sourceType: "module" },
   overrides: [
     {
       files: ["src/**/*", "./index.ts", "./jest.config.ts"],

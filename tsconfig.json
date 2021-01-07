@@ -13,5 +13,10 @@
     "target": "ES5",
     "typeRoots": ["node_modules/@types"]
   },
-  "include": ["src", "./index.ts", "./jest.config.ts"]
+  "include": [
+    "src",
+    "./index.ts",
+    "./scriptloader-support.ts",
+    "./jest.config.ts"
+  ]
 }
