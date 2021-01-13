@@ -11,7 +11,10 @@
     "module": "commonjs",
     "moduleResolution": "node",
     "target": "ES5",
-    "typeRoots": ["node_modules/@types"]
+    "typeRoots": ["node_modules/@types"],
+    "paths": {
+      "scriptloader-support/*": ["./src/scriptloader-support/*"]
+    }
   },
   "include": ["src", "./index.ts", "./jest.config.ts"]
 }
