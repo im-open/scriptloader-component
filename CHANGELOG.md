@@ -1,3 +1,14 @@
+# [1.4.0](https://github.com/WTW-IM/scriptloader-component/compare/v1.3.0...v1.4.0) (2021-01-13)
+
+
+### New
+
+* exporting scriptloader-support to be used outside of React ([b3b1f89](https://github.com/WTW-IM/scriptloader-component/commit/b3b1f89fd9aec7cbca14209f6fddee176a2ef3c5))
+
+### Update
+
+* utilizing promises for loading scripts ([e472016](https://github.com/WTW-IM/scriptloader-component/commit/e4720169ea711f2feb3b5d1d6bb282a7218f5bcf))
+
 # [1.3.0](https://github.com/WTW-IM/scriptloader-component/compare/v1.2.2...v1.3.0) (2021-01-05)
 
 
