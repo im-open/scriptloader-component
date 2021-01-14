@@ -1,3 +1,10 @@
+## [1.4.1](https://github.com/WTW-IM/scriptloader-component/compare/v1.4.0...v1.4.1) (2021-01-14)
+
+
+### Fix
+
+* fixing a bug where webpack would break due to exports named twice ([c57c97e](https://github.com/WTW-IM/scriptloader-component/commit/c57c97e30d19694a5704385759511e72d76ca787))
+
 # [1.4.0](https://github.com/WTW-IM/scriptloader-component/compare/v1.3.0...v1.4.0) (2021-01-13)
 
 
