@@ -13,10 +13,7 @@ const getNewScript = (source: string): HTMLScriptElement => {
   return newScript;
 };
 
-const setupListeners = (
-  scriptRef: HTMLScriptElement,
-  source: string
-): (() => void) => {
+const setupListeners = (scriptRef: HTMLScriptElement, source: string): void => {
   const removeListeners = () => {
     scriptRef.removeEventListener("load", loadEvent);
     scriptRef.removeEventListener("error", errorEvent);
@@ -42,16 +39,10 @@ const setupListeners = (
 
   scriptRef.addEventListener("load", loadEvent);
   scriptRef.addEventListener("error", errorEvent);
-
-  return removeListeners;
 };
 
-export const waitForScript = (source: string): Promise<void> => {
-  let scriptRef = document.querySelector<HTMLScriptElement>(
-    `script[src="${source}"]`
-  );
-  const scriptExists = Boolean(scriptRef);
-  const scriptPromise = new Promise<void>((resolve, reject) => {
+export const waitForScript = (source: string): Promise<void> =>
+  new Promise<void>((resolve, reject) => {
     const updater = ({ loading, failed, failureEvent }: CachedScript) => {
       if (!loading && !failed) {
         resolve();
@@ -62,34 +53,36 @@ export const waitForScript = (source: string): Promise<void> => {
         removeScriptUpdater(source, updater);
       }
     };
-    addScriptUpdater(source, updater);
-    updater(getFromWindowCache(source));
-  });
+    const handleExistingScript = (ref) => {
+      const cachedScriptInfo = getFromWindowCache(source);
+      if (!cachedScriptInfo.scriptCreated) {
+        // if we did not create the script, assume it has loaded
+        updater(
+          updateCachedScript(source, {
+            loading: false,
+            failed: false,
+          })
+        );
+      } else if (!cachedScriptInfo.loading) {
+        updater(cachedScriptInfo);
+      } else {
+        addScriptUpdater(source, updater);
+      }
+    };
+    const handleNewScript = () => {
+      const newRef = getNewScript(source);
+      updater(updateCachedScript(source, { scriptCreated: true }));
+      addScriptUpdater(source, updater);
+      setupListeners(newRef, source);
+      document.body.appendChild(newRef);
+    };
+    const scriptRef = document.querySelector<HTMLScriptElement>(
+      `script[src="${source}"]`
+    );
 
-  if (scriptExists) {
-    const cachedScriptInfo = getFromWindowCache(source);
-    if (!cachedScriptInfo.scriptCreated) {
-      // if we did not create the script, assume it has loaded
-      updateCachedScript(source, {
-        loading: false,
-        failed: false,
-      });
-      return scriptPromise;
+    if (scriptRef) {
+      handleExistingScript(scriptRef);
+    } else {
+      handleNewScript();
     }
-
-    // if we are not loading, do nothing
-    if (!cachedScriptInfo.loading) return scriptPromise;
-
-    // if we are loading and we did create the script, listen
-    setupListeners(scriptRef, source);
-    return scriptPromise;
-  }
-
-  // if we did not create the script, create it
-  scriptRef = getNewScript(source);
-  updateCachedScript(source, { scriptCreated: true });
-  setupListeners(scriptRef, source);
-  document.body.appendChild(scriptRef);
-
-  return scriptPromise;
-};
+  });
