@@ -15,5 +15,5 @@ const replaceFileText = (file, ...replaceArgs) => {
 replaceFileText(
   path.join(__dirname, "github-prerelease", "lib", "success.js"),
   "type:pr+is:merged",
-  "type:pr"
+  "type:pr+is:open"
 );

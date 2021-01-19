@@ -79,8 +79,14 @@ const branchConfig = {
     [
       require.resolve("./release/github-prerelease"),
       {
-        successComment:
-          "This PR is part of this prerelease version for testing: ${nextRelease.version}",
+        successComment: `
+This PR is part of this prerelease version for testing: \${nextRelease.version}
+
+You can test it by using:
+\`\`\`bash
+npm install scriptloader-component@\${nextRelease.version}
+\`\`\`
+        `,
       },
     ],
   ],
