@@ -87,6 +87,7 @@ You can test it by using:
 npm install scriptloader-component@\${nextRelease.version}
 \`\`\`
         `,
+        releasedLabels: null,
       },
     ],
   ],
