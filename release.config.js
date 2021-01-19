@@ -1,5 +1,8 @@
+require("./release/create-github-prerelease");
 const { execSync } = require("child_process");
 const defaultReleaseRules = require("@semantic-release/commit-analyzer/lib/default-release-rules");
+
+const MAIN_BRANCH = "main";
 
 const branchName = execSync("git rev-parse --abbrev-ref HEAD")
   .toString()
@@ -74,7 +77,7 @@ const branchConfig = {
   plugins: [
     ...basePlugins,
     [
-      "@semantic-release/github",
+      require.resolve("./release/github-prerelease"),
       {
         successComment:
           "This PR is part of this prerelease version for testing: ${nextRelease.version}",
@@ -83,10 +86,13 @@ const branchConfig = {
   ],
 };
 
-const config = branchName === "main" ? mainConfig : branchConfig;
+const config = branchName === MAIN_BRANCH ? mainConfig : branchConfig;
 
 module.exports = {
-  branches: ["main", { name: branchName, channel: preId, prerelease: preId }],
+  branches: [
+    MAIN_BRANCH,
+    { name: branchName, channel: preId, prerelease: preId },
+  ],
   preset: "eslint",
   repositoryUrl: "git@github.com:WTW-IM/scriptloader-component.git",
   ...config,
