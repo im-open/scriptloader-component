@@ -77,7 +77,8 @@ const branchConfig = {
   plugins: [
     ...basePlugins,
     [
-      require.resolve("./release/github-prerelease"),
+      //require.resolve("./release/github-prerelease"),
+      "@semantic-release/github",
       {
         successComment: `
 This PR is part of this prerelease version for testing: \${nextRelease.version}
@@ -87,6 +88,7 @@ You can test it by using:
 npm install scriptloader-component@\${nextRelease.version}
 \`\`\`
         `,
+        releasedLabels: [],
       },
     ],
   ],
