@@ -1,3 +1,26 @@
+## [1.4.2](https://github.com/WTW-IM/scriptloader-component/compare/v1.4.1...v1.4.2) (2021-01-20)
+
+
+### Build
+
+* adding publishing to PRs for prerelease versions ([4dc2f3d](https://github.com/WTW-IM/scriptloader-component/commit/4dc2f3d175c617530417e6effd189469c2de6a16))
+* attempting to add PR comments for prerelease versions ([bb03f31](https://github.com/WTW-IM/scriptloader-component/commit/bb03f311c297f153e4e9b9c094fc82e272f468ba))
+* deleting im-pipeline-bot PR comments before adding new ones ([c4b2ada](https://github.com/WTW-IM/scriptloader-component/commit/c4b2ada5736689d035cd6ad9da9b19b6d91b1ad9))
+* improving PR commenting ([8c238cf](https://github.com/WTW-IM/scriptloader-component/commit/8c238cfe1601b7dfa78c31f706ac8d66c8a7d24c))
+* running publish on all branches ([105a729](https://github.com/WTW-IM/scriptloader-component/commit/105a729fcb0afef98058436afc676620edf1166f))
+* setting up prerelease PR interaction ([07fcdde](https://github.com/WTW-IM/scriptloader-component/commit/07fcdde43a4c101255670ef856af63ab69e96b20))
+* updating PRs with internal prerelease @semantic-release plugin ([bfa9c3d](https://github.com/WTW-IM/scriptloader-component/commit/bfa9c3dd73a76b6f6bedec85f6d445f56bc6348d))
+
+### Fix
+
+* ensuring we call back on success while mounted ([3e05d67](https://github.com/WTW-IM/scriptloader-component/commit/3e05d67d0df24aff74422b743c0eb98df82efdd8))
+* fixing a small spelling error in scriptCache.ts ([3d74ee4](https://github.com/WTW-IM/scriptloader-component/commit/3d74ee49146219efcc094620a9f8c1966d24c757))
+
+### Refactor
+
+* moving script generation into scriptCache ([e18b746](https://github.com/WTW-IM/scriptloader-component/commit/e18b746219a1688f6600eb1d707927f73a5904f7))
+* setting up script inside Promise ([875e62f](https://github.com/WTW-IM/scriptloader-component/commit/875e62f4fbda026c4ac6119b6937f700c9ecf0c3))
+
 ## [1.4.1](https://github.com/WTW-IM/scriptloader-component/compare/v1.4.0...v1.4.1) (2021-01-14)
 
 
