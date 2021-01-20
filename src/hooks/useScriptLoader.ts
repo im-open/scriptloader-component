@@ -20,7 +20,7 @@ const useScriptLoader: ScriptLoader = (config) => {
     },
   } = config;
   const isMounted = useRef(true);
-  useEffect(() => () => (isMounted.current = false));
+  useEffect(() => () => (isMounted.current = false), []);
   const successFunc = useCallback(() => isMounted.current && onSuccess(), [
     onSuccess,
   ]);
