@@ -1,13 +1,20 @@
 const { isNil, uniqBy, flatten } = require("lodash");
 const pFilter = require("p-filter");
 const issueParser = require("issue-parser");
+const debug = require("debug")("semantic-release:github-prerelease");
 
-// this file will be copied two folders deeper
-const resolveConfig = require("./resolve-config");
-const getClient = require("./resolve-config");
-const parseGithubUrl = require("./parse-github-url");
-const getSearchQueries = require("./get-search-queries");
+const resolveConfig = require("@semantic-release/github/lib/resolve-config");
+const getClient = require("@semantic-release/github/lib/get-client");
+const parseGithubUrl = require("@semantic-release/github/lib/parse-github-url");
+const getSearchQueries = require("@semantic-release/github/lib/get-search-queries");
+
+// these files will be copied two folders deeper
 const success = require("./new-success");
+
+const ghGet = async (ghResult) => {
+  const res = await ghResult;
+  return (res && res.data) || res;
+};
 
 module.exports = async (pluginConfig, context) => {
   const {
@@ -22,15 +29,19 @@ module.exports = async (pluginConfig, context) => {
     proxy,
     successComment,
   } = resolveConfig(pluginConfig, context);
-  const github = getClient({
-    githubToken,
-    githubUrl,
-    githubApiPathPrefix,
-    proxy,
-  });
+  const github = getClient(
+    {
+      githubToken,
+      githubUrl,
+      githubApiPathPrefix,
+      proxy,
+    },
+    context
+  );
+  const { login } = await ghGet(github.users.getAuthenticated());
   const [owner, repo] = (
-    await github.repos.get(parseGithubUrl(repositoryUrl))
-  ).data.full_name.split("/");
+    await ghGet(github.repos.get(parseGithubUrl(repositoryUrl)))
+  ).full_name.split("/");
 
   if (successComment === false) {
     logger.log("Skipping old comment deletion.");
@@ -42,20 +53,23 @@ module.exports = async (pluginConfig, context) => {
     const shas = commits.map(({ hash }) => hash);
 
     const searchQueries = getSearchQueries(
-      `repo:${owner}/${repo}+type:pr+is:merged`,
+      `repo:${owner}/${repo}+type:pr+is:open`,
       shas
     ).map(
-      async (q) => (await github.search.issuesAndPullRequests({ q })).data.items
+      async (q) =>
+        (await ghGet(github.search.issuesAndPullRequests({ q }))).items
     );
 
     const prs = await pFilter(
       uniqBy(flatten(await Promise.all(searchQueries)), "number"),
       async ({ number }) =>
         (
-          await github.pulls.listCommits({ owner, repo, pull_number: number })
-        ).data.find(({ sha }) => shas.includes(sha)) ||
+          await ghGet(
+            github.pulls.listCommits({ owner, repo, pull_number: number })
+          )
+        ).find(({ sha }) => shas.includes(sha)) ||
         shas.includes(
-          (await github.pulls.get({ owner, repo, pull_number: number })).data
+          (await ghGet(github.pulls.get({ owner, repo, pull_number: number })))
             .merge_commit_sha
         )
     );
@@ -77,23 +91,32 @@ module.exports = async (pluginConfig, context) => {
         : issues;
     }, []);
 
+    const allIssues = uniqBy([...prs, ...issues], "number");
     await Promise.all(
-      uniqBy([...prs, ...issues], "number").map(async (issue) => {
+      allIssues.map(async (issue) => {
         try {
           const comments = { owner, repo, issue_number: issue.number };
-          const foundComments = (
-            await github.issues.listComments(comments)
-          ).filter((comment) => comment.user.login === "im-pipeline-bot");
+          const allComments = await ghGet(github.issues.listComments(comments));
+          const targetComments = allComments.filter(
+            (comment) => comment.user.login === login
+          );
 
-          for (let c in foundComments) {
-            await github.issues.deleteComment({
-              owner,
-              repo,
-              comment_id: c.id,
-            });
-            logger.log("Removed comment %c from issue #%d", c.id, issue.number);
-          }
+          await Promise.all(
+            targetComments.map(async (c) => {
+              await github.issues.deleteComment({
+                owner,
+                repo,
+                comment_id: c.id,
+              });
+              logger.log(
+                "Removed comment %s from issue #%d",
+                c.id,
+                issue.number
+              );
+            })
+          );
         } catch (error) {
+          debug("got an error deleting a comment", error);
           if (error.status === 403) {
             logger.error(
               "Not allowed to delete a comment to the issue #%d.",
