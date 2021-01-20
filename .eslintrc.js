@@ -52,7 +52,7 @@ module.exports = {
       },
     },
     {
-      files: ["./*.js", "./scriptloader-support/*.js"],
+      files: ["./*.js", "./scriptloader-support/*.js", "./release/**"],
       env: { node: true },
     },
     {

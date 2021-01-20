@@ -51,7 +51,7 @@ const defaultCachedScript = {
   scriptCreated: false,
 };
 
-const getCahcedScriptUpdaters = (url: string): CachedScriptUpdater[] =>
+const getCachedScriptUpdaters = (url: string): CachedScriptUpdater[] =>
   (window.__loadedScriptsUpdaters[url] =
     window.__loadedScriptsUpdaters[url] || []);
 
@@ -71,7 +71,7 @@ export function updateCachedScript(
     ...updatedScript,
   });
 
-  getCahcedScriptUpdaters(url).forEach((updater) => updater(newScript));
+  getCachedScriptUpdaters(url).forEach((updater) => updater(newScript));
 
   return newScript;
 }
@@ -81,7 +81,7 @@ export function addScriptUpdater(
   updater: CachedScriptUpdater
 ): void {
   window.__loadedScriptsUpdaters[url] = [
-    ...getCahcedScriptUpdaters(url),
+    ...getCachedScriptUpdaters(url),
     updater,
   ];
 }
@@ -90,7 +90,63 @@ export function removeScriptUpdater(
   url: string,
   updater: CachedScriptUpdater
 ): void {
-  window.__loadedScriptsUpdaters[url] = getCahcedScriptUpdaters(url).filter(
+  window.__loadedScriptsUpdaters[url] = getCachedScriptUpdaters(url).filter(
     (currentUpdater) => currentUpdater !== updater
   );
+}
+
+const getNewScript = (source: string): HTMLScriptElement => {
+  const newScript = document.createElement("script");
+  newScript.async = true;
+  newScript.setAttribute("src", source);
+  return newScript;
+};
+
+const setupListeners = (scriptRef: HTMLScriptElement, source: string): void => {
+  const removeListeners = () => {
+    scriptRef.removeEventListener("load", loadEvent);
+    scriptRef.removeEventListener("error", errorEvent);
+  };
+
+  const generateScriptEventListener = (
+    getResultingCachedScript: (ev: Event) => Partial<CachedScript>
+  ) => (ev: Event) => {
+    updateCachedScript(source, getResultingCachedScript(ev));
+    removeListeners();
+  };
+
+  const loadEvent = generateScriptEventListener(() => ({
+    loading: false,
+    failed: false,
+  }));
+
+  const errorEvent = generateScriptEventListener((err: ErrorEvent) => ({
+    loading: false,
+    failed: true,
+    failureEvent: err,
+  }));
+
+  scriptRef.addEventListener("load", loadEvent);
+  scriptRef.addEventListener("error", errorEvent);
+};
+
+export function retrieveCachedScript(source: string): CachedScript {
+  return document.querySelector<HTMLScriptElement>(`script[src="${source}"]`)
+    ? (() => {
+        const cachedScriptInfo = getFromWindowCache(source);
+        // if we did not create the script, assume it has loaded
+        if (!cachedScriptInfo.scriptCreated)
+          return updateCachedScript(source, {
+            loading: false,
+            failed: false,
+          });
+
+        return cachedScriptInfo;
+      })()
+    : (() => {
+        const newRef = getNewScript(source);
+        setupListeners(newRef, source);
+        document.body.appendChild(newRef);
+        return updateCachedScript(source, { scriptCreated: true });
+      })();
 }

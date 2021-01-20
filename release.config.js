@@ -1,28 +1,62 @@
+require("./release/create-github-prerelease");
+const { execSync } = require("child_process");
 const defaultReleaseRules = require("@semantic-release/commit-analyzer/lib/default-release-rules");
 
-module.exports = {
-  branches: ["main"],
-  repositoryUrl: "git@github.com:WTW-IM/scriptloader-component.git",
+const MAIN_BRANCH = "main";
+
+const branchName = execSync("git rev-parse --abbrev-ref HEAD")
+  .toString()
+  .replace("\n", "");
+
+const getPrereleaseId = () => {
+  const currentShaChars = execSync("git rev-parse HEAD").toString();
+  const currentSha = currentShaChars.substr(0, 6);
+
+  const tagsOutput = execSync("git ls-remote --tags").toString().split("\n");
+  const tags = tagsOutput
+    .map((tagString) => {
+      const execResult = /\/tags\/(?<tag>.*)$/.exec(tagString);
+      if (!execResult) return null;
+
+      return execResult.groups.tag;
+    })
+    .filter((tag) => tag && tag.includes(branchName))
+    .map((tag) => tag.substr(tag.indexOf(branchName)));
+
+  let shaVersion = 0;
+  let prereleaseName = `${branchName}-${currentSha}`;
+
+  while (tags.includes(`${prereleaseName}.1`)) {
+    shaVersion += 1;
+    prereleaseName = `${prereleaseName}-${shaVersion}`;
+  }
+  prereleaseName = prereleaseName.replace(`${branchName}-`, "");
+  const prereleaseId = `\${name}-${prereleaseName}`;
+  return prereleaseId;
+};
+
+const preId = getPrereleaseId();
+
+const basePlugins = [
+  [
+    "@semantic-release/commit-analyzer",
+    {
+      releaseRules: [
+        ...defaultReleaseRules,
+        { tag: "Refactor", release: "patch" },
+        { tag: "Patch", release: "patch" },
+      ],
+    },
+  ],
+  "@semantic-release/commit-analyzer",
+  "@semantic-release/release-notes-generator",
+  "@semantic-release/changelog",
+  "@semantic-release/npm",
+];
+
+const mainConfig = {
   plugins: [
-    [
-      "@semantic-release/commit-analyzer",
-      {
-        preset: "eslint",
-        releaseRules: [
-          ...defaultReleaseRules,
-          { tag: "Refactor", release: "patch" },
-          { tag: "Patch", release: "patch" },
-        ],
-      },
-    ],
-    [
-      "@semantic-release/release-notes-generator",
-      {
-        preset: "eslint",
-      },
-    ],
-    "@semantic-release/changelog",
-    "@semantic-release/npm",
+    ...basePlugins,
     [
       "@semantic-release/github",
       {
@@ -37,4 +71,38 @@ module.exports = {
       },
     ],
   ],
+};
+
+const branchConfig = {
+  plugins: [
+    ...basePlugins,
+    {
+      name: "github-prerelease",
+      path: "./release",
+      successComment: `
+This PR is part of this prerelease version for testing: \${nextRelease.version}
+
+You can test it by using:
+\`\`\`bash
+npm install scriptloader-component@\${nextRelease.version}
+\`\`\`
+        `,
+      labels: false,
+      releasedLabels: false,
+      assets: "*.tgz",
+      debug: true,
+    },
+  ],
+};
+
+const config = branchName === MAIN_BRANCH ? mainConfig : branchConfig;
+
+module.exports = {
+  branches: [
+    MAIN_BRANCH,
+    { name: branchName, channel: preId, prerelease: preId },
+  ],
+  preset: "eslint",
+  repositoryUrl: "git@github.com:WTW-IM/scriptloader-component.git",
+  ...config,
 };
