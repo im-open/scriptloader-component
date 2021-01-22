@@ -29,7 +29,7 @@ module.exports = {
     },
   },
   extends: baseExtends,
-  ignorePatterns: ["dist/**/*"],
+  ignorePatterns: ["dist/**/*", "jest.config*"],
   env: { es6: true },
   parserOptions: { ecmaVersion: 2021, sourceType: "module" },
   overrides: [
@@ -52,7 +52,12 @@ module.exports = {
       },
     },
     {
-      files: ["./*.js", "./scriptloader-support/*.js", "./release/**"],
+      files: [
+        "./*.js",
+        "./scriptloader-support/*.js",
+        "./useScriptLoader/*.js",
+        "./release/**",
+      ],
       env: { node: true },
     },
     {
