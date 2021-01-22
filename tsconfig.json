@@ -12,9 +12,10 @@
     "moduleResolution": "node",
     "target": "ES5",
     "typeRoots": ["node_modules/@types"],
+    "rootDir": "./src",
     "paths": {
       "scriptloader-support/*": ["./src/scriptloader-support/*"]
     }
   },
-  "include": ["src", "./index.ts", "./jest.config.ts"]
+  "include": ["src"]
 }

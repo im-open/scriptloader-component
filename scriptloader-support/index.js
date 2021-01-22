@@ -1,2 +1,2 @@
-const supportExports = require("../dist/src/scriptloader-support");
+const supportExports = require("../dist/scriptloader-support");
 module.exports = supportExports;
