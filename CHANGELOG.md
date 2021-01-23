@@ -1,3 +1,10 @@
+# [1.5.0](https://github.com/WTW-IM/scriptloader-component/compare/v1.4.2...v1.5.0) (2021-01-23)
+
+
+### Update
+
+* making sure we export things appropriately ([c56e2a1](https://github.com/WTW-IM/scriptloader-component/commit/c56e2a11c3e799e887f7cce9bb37e9d6526331ec))
+
 ## [1.4.2](https://github.com/WTW-IM/scriptloader-component/compare/v1.4.1...v1.4.2) (2021-01-20)
 
 
