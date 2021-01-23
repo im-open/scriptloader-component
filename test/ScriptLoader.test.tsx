@@ -8,7 +8,7 @@ import {
 } from "msw";
 import { setupServer } from "msw/node";
 import { render, screen, waitFor } from "@testing-library/react";
-import ScriptLoader, { ScriptLoaderProps } from "../src/ScriptLoader";
+import ScriptLoader, { ScriptLoaderProps } from "../src/index";
 
 type ResponseHandlerContext = typeof context;
 interface ResponseHandler {
