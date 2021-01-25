@@ -29,7 +29,12 @@ module.exports = {
     },
   },
   extends: baseExtends,
-  ignorePatterns: ["dist/**/*", "jest.config*"],
+  ignorePatterns: [
+    "dist/**/*",
+    "jest.config*",
+    "useScriptLoader/index.d.ts",
+    "scriptloader-support/index.d.ts",
+  ],
   env: { es6: true },
   parserOptions: { ecmaVersion: 2021, sourceType: "module" },
   overrides: [

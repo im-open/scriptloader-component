@@ -1,1 +1,2 @@
-export * from "../src/scriptloader-support";
+export = supportExports;
+import supportExports = require("../dist/scriptloader-support");
