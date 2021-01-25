@@ -1,3 +1,10 @@
+## [1.5.1](https://github.com/WTW-IM/scriptloader-component/compare/v1.5.0...v1.5.1) (2021-01-25)
+
+
+### Fix
+
+* exporting correct type for useScriptLoader ([dbd49b6](https://github.com/WTW-IM/scriptloader-component/commit/dbd49b696105d6954b46bb39c63dff2ca6dc7d1b))
+
 # [1.5.0](https://github.com/WTW-IM/scriptloader-component/compare/v1.4.2...v1.5.0) (2021-01-23)
 
 
