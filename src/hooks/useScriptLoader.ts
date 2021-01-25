@@ -11,7 +11,7 @@ export interface ScriptLoader {
   (config: ScriptLoaderConfiguration): void;
 }
 
-const useScriptLoader: ScriptLoader = (config) => {
+export default (function useScriptLoader(config) {
   const {
     source,
     onSuccess,
@@ -40,6 +40,4 @@ const useScriptLoader: ScriptLoader = (config) => {
     };
     void waitForSource();
   }, [source, successFunc, errorFunc]);
-};
-
-export default useScriptLoader;
+} as ScriptLoader);
