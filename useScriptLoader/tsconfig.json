@@ -1,0 +1,10 @@
+{
+  "extends": "../tsconfig.json",
+  "include": ["./index.js"],
+  "exclude": [],
+  "compilerOptions": {
+    "emitDeclarationOnly": true,
+    "rootDir": "./",
+    "outDir": "./"
+  }
+}
