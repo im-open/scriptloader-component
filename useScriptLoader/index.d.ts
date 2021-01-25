@@ -1,1 +1,2 @@
-export * from "../src/hooks/useScriptLoader";
+export = useScriptLoaderExports;
+import useScriptLoaderExports = require("../dist/hooks/useScriptLoader");

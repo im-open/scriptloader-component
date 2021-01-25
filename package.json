@@ -12,7 +12,10 @@
   ],
   "scripts": {
     "test": "eslint --quiet . && tsc --noEmit --project ./tsconfig.json && jest",
-    "build": "tsc --project ./tsconfig.json",
+    "build": "npm run build:base && npm run build:useScriptLoader && npm run build:scriptloader-support",
+    "build:base": "tsc --project ./tsconfig.json",
+    "build:useScriptLoader": "tsc --project ./useScriptLoader/tsconfig.json",
+    "build:scriptloader-support": "tsc --project ./scriptloader-support/tsconfig.json",
     "prepack": "npm run build"
   },
   "repository": {
