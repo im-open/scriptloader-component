@@ -66,17 +66,17 @@ const ScriptLoader: ScriptLoaderFunction = ({
   return <ScriptLoaderContext.Provider value={{ loaderStatus }} {...props} />;
 };
 
-const Success: React.FC = ({ children }) => {
+const Success: React.FC<React.PropsWithChildren> = ({ children }) => {
   const { loaderStatus } = useContext(ScriptLoaderContext);
   return loaderStatus === "succeeded" ? <>{children}</> : <></>;
 };
 
-const Failed: React.FC = ({ children }) => {
+const Failed: React.FC<React.PropsWithChildren> = ({ children }) => {
   const { loaderStatus } = useContext(ScriptLoaderContext);
   return loaderStatus === "failed" ? <>{children}</> : <></>;
 };
 
-const Loading: React.FC = ({ children }) => {
+const Loading: React.FC<React.PropsWithChildren> = ({ children }) => {
   const { loaderStatus } = useContext(ScriptLoaderContext);
   return loaderStatus === "loading" ? <>{children}</> : <></>;
 };
