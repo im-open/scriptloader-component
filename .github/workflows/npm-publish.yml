@@ -37,10 +37,12 @@ jobs:
         uses: actions/checkout@v2
         with:
           persist-credentials: true
+          token: ${{ secrets.PIPELINE_BOT_PAT }}
       - run: npm ci
       - name: Semantic Release
         env:
           GITHUB_TOKEN: ${{ secrets.PIPELINE_BOT_PAT }}
+          GH_TOKEN: ${{ secrets.PIPELINE_BOT_PAT }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
           GIT_AUTHOR_NAME: im-pipeline-bot
           GIT_AUTHOR_EMAIL: ${{ secrets.COMMITBOT_EMAIL }}
