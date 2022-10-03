@@ -1,3 +1,16 @@
+## [1.5.2](https://github.com/WTW-IM/scriptloader-component/compare/v1.5.1...v1.5.2) (2022-10-03)
+
+
+### Build
+
+* ensuring we use pipeline bot pat for checkout ([b43826e](https://github.com/WTW-IM/scriptloader-component/commit/b43826e7fe3747f9d612bf72a0e6b3598e5e7474))
+* persist gh credentials ([84d1b29](https://github.com/WTW-IM/scriptloader-component/commit/84d1b296b6f9cba347a68b6ca39dfbdb4a36ac2a))
+* use semantic-release-actionv3 ([a0b62df](https://github.com/WTW-IM/scriptloader-component/commit/a0b62df849a7ba59788c3c44e8fd4cb1ceb9bef4))
+
+### Fix
+
+* react 18 children support ([9135d1b](https://github.com/WTW-IM/scriptloader-component/commit/9135d1b8255c76ebf226715ed9c81404a803eab4))
+
 ## [1.5.1](https://github.com/WTW-IM/scriptloader-component/compare/v1.5.0...v1.5.1) (2021-01-25)
 
 
