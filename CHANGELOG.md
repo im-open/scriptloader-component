@@ -1,3 +1,14 @@
+## [1.5.3](https://github.com/WTW-IM/scriptloader-component/compare/v1.5.2...v1.5.3) (2022-11-11)
+
+
+### Build
+
+* use node latest lts for builds ([6f400cd](https://github.com/WTW-IM/scriptloader-component/commit/6f400cd07dc27898c82dda0b9d432b517067cc5a))
+
+### Fix
+
+* ensure Success/Failed/Loading types match export ([263760d](https://github.com/WTW-IM/scriptloader-component/commit/263760d5d55a676fa535652694345a11eaca4a8f))
+
 ## [1.5.2](https://github.com/WTW-IM/scriptloader-component/compare/v1.5.1...v1.5.2) (2022-10-03)
 
 
