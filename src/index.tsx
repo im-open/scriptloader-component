@@ -26,6 +26,7 @@ export interface ScriptLoaderProps {
   source: string;
   onError?: (err: ErrorEvent) => void;
   onSuccess?: () => void;
+  children: React.ReactNode;
 }
 
 const ScriptLoader: ScriptLoaderFunction = ({
