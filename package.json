@@ -1,6 +1,6 @@
 {
   "name": "scriptloader-component",
-  "version": "1.5.3",
+  "version": "1.5.4",
   "description": "A React Component for reacting to scripts loading.",
   "main": "dist/index.js",
   "module": "dist/index.js",

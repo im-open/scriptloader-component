@@ -1,3 +1,10 @@
+## [1.5.4](https://github.com/WTW-IM/scriptloader-component/compare/v1.5.3...v1.5.4) (2022-11-11)
+
+
+### Patch
+
+* add children to ScriptLoaderProps ([86cf8b3](https://github.com/WTW-IM/scriptloader-component/commit/86cf8b387630b363b0c54b8ecdb36c24c3370d2d))
+
 ## [1.5.3](https://github.com/WTW-IM/scriptloader-component/compare/v1.5.2...v1.5.3) (2022-11-11)
 
 
