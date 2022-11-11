@@ -3,9 +3,9 @@ import useScriptLoader from "./hooks/useScriptLoader";
 import useSafeState from "./hooks/useSafeState";
 
 export interface ScriptLoaderFunction extends React.FC<ScriptLoaderProps> {
-  Success: React.FC;
-  Failed: React.FC;
-  Loading: React.FC;
+  Success: typeof Success;
+  Failed: typeof Failed;
+  Loading: typeof Loading;
 }
 
 type ScriptLoaderStatus = "loading" | "succeeded" | "failed";
