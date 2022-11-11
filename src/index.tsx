@@ -3,19 +3,23 @@ import useScriptLoader from "./hooks/useScriptLoader";
 import useSafeState from "./hooks/useSafeState";
 
 export interface ScriptLoaderFunction extends React.FC<ScriptLoaderProps> {
-  Success: React.FC;
-  Failed: React.FC;
-  Loading: React.FC;
+  Success: typeof Success;
+  Failed: typeof Failed;
+  Loading: typeof Loading;
 }
 
-type ScriptLoaderStatus = "loading" | "succeeded" | "failed";
+enum ScriptLoaderStatus {
+  LOADING = "loading",
+  SUCCEEDED = "succeeded",
+  FAILED = "failed",
+}
 
 interface ScriptLoaderContextShape {
   loaderStatus: ScriptLoaderStatus;
 }
 
 const ScriptLoaderContext = createContext<ScriptLoaderContextShape>({
-  loaderStatus: "loading",
+  loaderStatus: ScriptLoaderStatus.LOADING,
 });
 
 const noop = () => {
@@ -37,9 +41,9 @@ const ScriptLoader: ScriptLoaderFunction = ({
   const [isSucceeded, setIsSucceeded] = useSafeState(false);
   const [isFailed, setIsFailed] = useSafeState(false);
   const loaderStatus = useMemo<ScriptLoaderStatus>(() => {
-    if (isSucceeded) return "succeeded";
-    if (isFailed) return "failed";
-    return "loading";
+    if (isSucceeded) return ScriptLoaderStatus.SUCCEEDED;
+    if (isFailed) return ScriptLoaderStatus.FAILED;
+    return ScriptLoaderStatus.LOADING;
   }, [isSucceeded, isFailed]);
 
   const onLoaderSuccess = useCallback(() => {
@@ -68,17 +72,21 @@ const ScriptLoader: ScriptLoaderFunction = ({
 
 const Success: React.FC<React.PropsWithChildren> = ({ children }) => {
   const { loaderStatus } = useContext(ScriptLoaderContext);
-  return loaderStatus === "succeeded" ? <>{children}</> : <></>;
+  return loaderStatus === ScriptLoaderStatus.SUCCEEDED ? (
+    <>{children}</>
+  ) : (
+    <></>
+  );
 };
 
 const Failed: React.FC<React.PropsWithChildren> = ({ children }) => {
   const { loaderStatus } = useContext(ScriptLoaderContext);
-  return loaderStatus === "failed" ? <>{children}</> : <></>;
+  return loaderStatus === ScriptLoaderStatus.FAILED ? <>{children}</> : <></>;
 };
 
 const Loading: React.FC<React.PropsWithChildren> = ({ children }) => {
   const { loaderStatus } = useContext(ScriptLoaderContext);
-  return loaderStatus === "loading" ? <>{children}</> : <></>;
+  return loaderStatus === ScriptLoaderStatus.LOADING ? <>{children}</> : <></>;
 };
 
 ScriptLoader.Success = Success;
