@@ -185,7 +185,6 @@ describe("failure", () => {
   });
 
   it("renders failed when it fails", async () => {
-    console.log("rendering failure!");
     renderLoader();
     expect(await screen.findByText("Failed :(")).toBeInTheDocument();
     expect(screen.queryByText("Success!")).not.toBeInTheDocument();
