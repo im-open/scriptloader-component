@@ -2,20 +2,28 @@
   "name": "scriptloader-component",
   "version": "1.5.4",
   "description": "A React Component for reacting to scripts loading.",
-  "main": "dist/index.js",
-  "module": "dist/index.js",
+  "exports": {
+    ".": {
+      "import": "module/index.js",
+      "default": "dist/index.js"
+    },
+    "./*.js": {
+      "import": "module/*.js",
+      "default": "dist/*.js"
+    }
+  },
   "files": [
     "dist",
+    "module",
     "src",
     "scriptloader-support",
     "useScriptLoader"
   ],
   "scripts": {
     "test": "eslint --quiet . && tsc --noEmit --project ./tsconfig.json && jest",
-    "build": "npm run build:base && npm run build:useScriptLoader && npm run build:scriptloader-support",
-    "build:base": "tsc --project ./tsconfig.json",
-    "build:useScriptLoader": "tsc --project ./useScriptLoader/tsconfig.json",
-    "build:scriptloader-support": "tsc --project ./scriptloader-support/tsconfig.json",
+    "build": "npm run build:dist && npm run build:module",
+    "build:dist": "tsc --project ./tsconfig.json",
+    "build:module": "tsc --project ./module-tsconfig.json",
     "prepack": "npm run build"
   },
   "repository": {
@@ -69,8 +77,8 @@
     "@testing-library/react": "^13.4.0",
     "@types/node": "^14.14.9",
     "@types/react": "^18.0.18",
-    "@typescript-eslint/eslint-plugin": "^4.8.2",
-    "@typescript-eslint/parser": "^4.8.2",
+    "@typescript-eslint/eslint-plugin": "^5.45.0",
+    "@typescript-eslint/parser": "^5.45.0",
     "babel-jest": "^29.3.1",
     "commitlint-config-eslint": "^1.0.0",
     "conventional-changelog-eslint": "^3.0.9",
@@ -94,7 +102,7 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "semantic-release": "^19.0.5",
-    "ts-node": "^9.0.0",
+    "ts-node": "^10.9.1",
     "typescript": "^4.1.3"
   }
 }
