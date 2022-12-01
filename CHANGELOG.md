@@ -1,3 +1,15 @@
+# [2.0.0](https://github.com/WTW-IM/scriptloader-component/compare/v1.5.4...v2.0.0) (2022-12-01)
+
+
+### Breaking
+
+* updating package to use ES modules file as main module ([e9ddd26](https://github.com/WTW-IM/scriptloader-component/commit/e9ddd263676e1690c702edb9bf092f37c2792fc8))
+
+### Update
+
+* exporting dist and module files ([9702141](https://github.com/WTW-IM/scriptloader-component/commit/97021418eb295cf80808696c0efd9d91724ed06d))
+* updating packages ([deab6ec](https://github.com/WTW-IM/scriptloader-component/commit/deab6ec1f021463a57957d21c66ee1748119b372))
+
 ## [1.5.4](https://github.com/WTW-IM/scriptloader-component/compare/v1.5.3...v1.5.4) (2022-11-11)
 
 
