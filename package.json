@@ -2,14 +2,15 @@
   "name": "scriptloader-component",
   "version": "1.5.4",
   "description": "A React Component for reacting to scripts loading.",
+  "main": "module/index.js",
   "exports": {
     ".": {
-      "import": "module/index.js",
-      "default": "dist/index.js"
+      "require": "dist/index.js",
+      "default": "module/index.js"
     },
     "./*": {
-      "import": "module/*.js",
-      "default": "dist/*.js"
+      "require": "dist/*.js",
+      "default": "module/*.js"
     }
   },
   "files": [
