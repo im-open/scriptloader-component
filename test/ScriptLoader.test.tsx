@@ -28,7 +28,7 @@ const setupJsReturn = (ctx: ResponseHandlerContext) => {
 const jsBody = (
   res: ResponseComposition,
   ctx: ResponseHandlerContext
-): MockedResponse => {
+): ReturnType<ResponseComposition> => {
   setupJsReturn(ctx);
   return res(ctx.body('var hw = "hello world"'));
 };
@@ -39,29 +39,30 @@ const server = setupServer(
   }) as ResponseHandler)
 );
 
-const renderLoader = (props: ScriptLoaderProps) =>
-  render(
-    <ScriptLoader {...props}>
+const renderLoader = (props?: Partial<ScriptLoaderProps>) => {
+  const renderProps = {
+    ...(props || {}),
+    source: props?.source || testFileLocation,
+  };
+
+  return render(
+    <ScriptLoader {...renderProps}>
       <ScriptLoader.Loading>Loading...</ScriptLoader.Loading>
       <ScriptLoader.Success>Success!</ScriptLoader.Success>
       <ScriptLoader.Failed>Failed :(</ScriptLoader.Failed>
     </ScriptLoader>
   );
+};
 
 beforeAll(() => server.listen());
-afterEach(async () => {
-  // Wait for requests to complete
-  await waitFor<boolean>(() =>
-    Boolean(screen.queryByText("Success!") || screen.queryByText("Failed :("))
-  );
-
+afterEach(() => {
   server.resetHandlers();
 });
 afterAll(() => server.close());
 
 describe("success", () => {
   it("renders success with success", async () => {
-    renderLoader({ source: testFileLocation });
+    renderLoader();
     expect(await screen.findByText("Success!")).toBeInTheDocument();
     expect(screen.queryByText("Loading...")).not.toBeInTheDocument();
     expect(screen.queryByText("Failed :(")).not.toBeInTheDocument();
@@ -71,7 +72,6 @@ describe("success", () => {
     const successFunc = jest.fn();
     const errorFunc = jest.fn();
     renderLoader({
-      source: testFileLocation,
       onSuccess: successFunc,
       onError: errorFunc,
     });
@@ -86,7 +86,7 @@ describe("success", () => {
     existingScript.setAttribute("src", testFileLocation);
     document.body.append(existingScript);
 
-    renderLoader({ source: testFileLocation });
+    renderLoader();
     expect(await screen.findByText("Success!")).toBeInTheDocument();
     expect(screen.queryByText("Loading...")).not.toBeInTheDocument();
     expect(screen.queryByText("Failed :(")).not.toBeInTheDocument();
@@ -101,7 +101,6 @@ describe("success", () => {
     const successFunc = jest.fn();
     const errorFunc = jest.fn();
     renderLoader({
-      source: testFileLocation,
       onSuccess: successFunc,
       onError: errorFunc,
     });
@@ -112,7 +111,7 @@ describe("success", () => {
 
   it("renders success if the script already loaded", async () => {
     // initial load
-    renderLoader({ source: testFileLocation });
+    renderLoader();
     expect(await screen.findByText("Success!")).toBeInTheDocument();
 
     render(
@@ -125,7 +124,7 @@ describe("success", () => {
 
   it("calls onSuccess if the script already loaded", async () => {
     // initial load
-    renderLoader({ source: testFileLocation });
+    renderLoader();
     expect(await screen.findByText("Success!")).toBeInTheDocument();
 
     const successFunc = jest.fn();
@@ -153,10 +152,13 @@ describe("loading", () => {
         return jsBody(res, ctx);
       }) as ResponseHandler)
     );
-    renderLoader({ source: testFileLocation });
+    renderLoader();
     expect(await screen.findByText("Loading...")).toBeInTheDocument();
     expect(screen.queryByText("Success!")).not.toBeInTheDocument();
     expect(screen.queryByText("Failed :(")).not.toBeInTheDocument();
+
+    // finish loading
+    expect(await screen.findByText("Success!")).toBeInTheDocument();
   });
 });
 
@@ -183,29 +185,28 @@ describe("failure", () => {
   });
 
   it("renders failed when it fails", async () => {
-    renderLoader({ source: testFileLocation });
+    renderLoader();
     expect(await screen.findByText("Failed :(")).toBeInTheDocument();
     expect(screen.queryByText("Success!")).not.toBeInTheDocument();
     expect(screen.queryByText("Loading...")).not.toBeInTheDocument();
   });
 
   it("calls onError with failure", async () => {
-    const successFunc = jest.fn();
-    const errorFunc = jest.fn();
+    const onSuccess = jest.fn();
+    const onError = jest.fn();
     renderLoader({
-      source: testFileLocation,
-      onSuccess: successFunc,
-      onError: errorFunc,
+      onSuccess,
+      onError,
     });
 
-    await waitFor<void>(() => expect(errorFunc).toHaveBeenCalledTimes(1));
-    expect(errorFunc).toHaveBeenCalledWith(expect.any(Event));
-    expect(successFunc).not.toHaveBeenCalled();
+    await waitFor<void>(() => expect(onError).toHaveBeenCalledTimes(1));
+    expect(onError).toHaveBeenCalledWith(expect.any(Event));
+    expect(onSuccess).not.toHaveBeenCalled();
   });
 
   it("renders failure if the script already failed", async () => {
     // initial load
-    renderLoader({ source: testFileLocation });
+    renderLoader();
     expect(await screen.findByText("Failed :(")).toBeInTheDocument();
 
     render(
@@ -218,23 +219,15 @@ describe("failure", () => {
 
   it("calls onError with the failureEvent if the script already failed", async () => {
     // initial load
-    renderLoader({ source: testFileLocation });
+    const onSuccess = jest.fn();
+    const onError = jest.fn();
+
+    renderLoader();
     expect(await screen.findByText("Failed :(")).toBeInTheDocument();
 
-    const successFunc = jest.fn();
-    const errorFunc = jest.fn();
-    render(
-      <ScriptLoader
-        source={testFileLocation}
-        onSuccess={successFunc}
-        onError={errorFunc}
-      >
-        <ScriptLoader.Success>Oh shoot!</ScriptLoader.Success>
-      </ScriptLoader>
-    );
-
-    await waitFor<void>(() => expect(errorFunc).toHaveBeenCalledTimes(1));
-    expect(errorFunc).toHaveBeenCalledWith(expect.any(Event));
-    expect(successFunc).not.toHaveBeenCalled();
+    renderLoader({ onSuccess, onError });
+    await waitFor<void>(() => expect(onError).toHaveBeenCalledTimes(1));
+    expect(onError).toHaveBeenCalledWith(expect.any(Event));
+    expect(onSuccess).not.toHaveBeenCalled();
   });
 });

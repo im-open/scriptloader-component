@@ -12,6 +12,7 @@ export default {
   // The glob patterns Jest uses to detect test files
   testRegex: ["/test/.*\\.(test|spec)\\.[jt]sx?"],
 
+  testEnvironment: "jsdom",
   // This configuration shows the Jest to the options so one can be passed to the testEnvironment
   testEnvironmentOptions: {
     resources: "usable",

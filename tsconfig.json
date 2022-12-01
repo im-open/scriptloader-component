@@ -13,6 +13,7 @@
     "target": "ES5",
     "typeRoots": ["node_modules/@types"],
     "rootDir": "./src",
+    "skipLibCheck": true,
     "paths": {
       "scriptloader-support/*": ["./src/scriptloader-support/*"]
     }
