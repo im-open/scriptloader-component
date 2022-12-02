@@ -1,3 +1,14 @@
+## [2.0.1](https://github.com/WTW-IM/scriptloader-component/compare/v2.0.0...v2.0.1) (2022-12-02)
+
+
+### Build
+
+* releasing PR branches on their branch name's channel ([f3f45ff](https://github.com/WTW-IM/scriptloader-component/commit/f3f45ff44337db40dbe856ce8761332e615c91ba))
+
+### Fix
+
+* ensuring all exports are present in secondary files ([8dbbc47](https://github.com/WTW-IM/scriptloader-component/commit/8dbbc473f0490d28b5e462c4481ca34faed50237))
+
 # [2.0.0](https://github.com/WTW-IM/scriptloader-component/compare/v1.5.4...v2.0.0) (2022-12-01)
 
 
