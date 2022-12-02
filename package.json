@@ -6,10 +6,12 @@
   "exports": {
     ".": {
       "require": "dist/index.js",
+      "import": "module/index.js",
       "default": "module/index.js"
     },
     "./*": {
       "require": "dist/*.js",
+      "import": "module/*.js",
       "default": "module/*.js"
     }
   },
