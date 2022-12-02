@@ -100,7 +100,7 @@ const config = branchName === MAIN_BRANCH ? mainConfig : branchConfig;
 module.exports = {
   branches: [
     MAIN_BRANCH,
-    { name: branchName, channel: preId, prerelease: preId },
+    { name: branchName, channel: "${name}", prerelease: preId },
   ],
   preset: "eslint",
   repositoryUrl: "git@github.com:WTW-IM/scriptloader-component.git",
