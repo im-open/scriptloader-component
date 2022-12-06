@@ -1,6 +1,5 @@
-import ScriptLoader from "./ScriptLoader";
-export { ScriptLoaderProps } from "./ScriptLoader";
+export { default } from "./ScriptLoader";
+export * from "./ScriptLoader";
 export { default as useScriptLoader } from "./hooks/useScriptLoader";
-export { waitForScript } from "./scriptloader-support";
-
-export default ScriptLoader;
+export * from "./hooks/useScriptLoader";
+export * from "./scriptloader-support";
