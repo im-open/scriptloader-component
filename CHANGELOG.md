@@ -1,3 +1,11 @@
+## [2.0.2](https://github.com/WTW-IM/scriptloader-component/compare/v2.0.1...v2.0.2) (2022-12-06)
+
+
+### Fix
+
+* outputting everything correctly ([4139972](https://github.com/WTW-IM/scriptloader-component/commit/413997256c872d4ecdab084c5c30ed93e31cd1a1))
+* shortening default export syntax ([da990af](https://github.com/WTW-IM/scriptloader-component/commit/da990af969f6714660ce331355cb8674311bab30))
+
 ## [2.0.1](https://github.com/WTW-IM/scriptloader-component/compare/v2.0.0...v2.0.1) (2022-12-02)
 
 
