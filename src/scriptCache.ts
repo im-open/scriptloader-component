@@ -95,10 +95,16 @@ export function removeScriptUpdater(
   );
 }
 
-const getNewScript = (source: string): HTMLScriptElement => {
+const getNewScript = (
+  source: string,
+  scriptAttributes?: Record<string, string>
+): HTMLScriptElement => {
   const newScript = document.createElement("script");
   newScript.async = true;
   newScript.setAttribute("src", source);
+  Object.entries(scriptAttributes ?? {}).forEach(([key, value]) =>
+    newScript.setAttribute(key, value)
+  );
   return newScript;
 };
 
@@ -108,12 +114,12 @@ const setupListeners = (scriptRef: HTMLScriptElement, source: string): void => {
     scriptRef.removeEventListener("error", errorEvent);
   };
 
-  const generateScriptEventListener = (
-    getResultingCachedScript: (ev: Event) => Partial<CachedScript>
-  ) => (ev: Event) => {
-    updateCachedScript(source, getResultingCachedScript(ev));
-    removeListeners();
-  };
+  const generateScriptEventListener =
+    (getResultingCachedScript: (ev: Event) => Partial<CachedScript>) =>
+    (ev: Event) => {
+      updateCachedScript(source, getResultingCachedScript(ev));
+      removeListeners();
+    };
 
   const loadEvent = generateScriptEventListener(() => ({
     loading: false,
@@ -130,8 +136,17 @@ const setupListeners = (scriptRef: HTMLScriptElement, source: string): void => {
   scriptRef.addEventListener("error", errorEvent);
 };
 
-export function retrieveCachedScript(source: string): CachedScript {
-  return document.querySelector<HTMLScriptElement>(`script[src="${source}"]`)
+export function retrieveCachedScript(
+  source: string,
+  scriptAttributes?: Record<string, string>
+): CachedScript {
+  const scriptQuery = Object.entries(scriptAttributes ?? {}).reduce(
+    (acc, [key, value]) => `${acc}[${key}="${value}"]`,
+    ""
+  );
+  return document.querySelector<HTMLScriptElement>(
+    `script[src="${source}"]${scriptQuery}`
+  )
     ? (() => {
         const cachedScriptInfo = getFromWindowCache(source);
         // if we did not create the script, assume it has loaded
@@ -144,7 +159,7 @@ export function retrieveCachedScript(source: string): CachedScript {
         return cachedScriptInfo;
       })()
     : (() => {
-        const newRef = getNewScript(source);
+        const newRef = getNewScript(source, scriptAttributes);
         setupListeners(newRef, source);
         document.body.appendChild(newRef);
         return updateCachedScript(source, { scriptCreated: true });

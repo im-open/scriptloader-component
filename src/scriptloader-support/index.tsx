@@ -5,7 +5,10 @@ import {
   retrieveCachedScript,
 } from "../scriptCache";
 
-export const waitForScript = (source: string): Promise<void> =>
+export const waitForScript = (
+  source: string,
+  scriptAttributes?: Record<string, string>
+): Promise<void> =>
   new Promise<void>((resolve, reject) => {
     const updater = ({ loading, failed, failureEvent }: CachedScript) => {
       if (!loading && !failed) {
@@ -17,7 +20,7 @@ export const waitForScript = (source: string): Promise<void> =>
         removeScriptUpdater(source, updater);
       }
     };
-    const cachedScriptInfo = retrieveCachedScript(source);
+    const cachedScriptInfo = retrieveCachedScript(source, scriptAttributes);
 
     if (!cachedScriptInfo.loading) {
       updater(cachedScriptInfo);
