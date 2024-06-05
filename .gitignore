@@ -3,4 +3,3 @@ dist
 module
 npm-debug.log
 .DS_Store
-release/github-prerelease

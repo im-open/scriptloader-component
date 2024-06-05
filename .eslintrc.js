@@ -56,7 +56,6 @@ module.exports = {
         "./*.js",
         "./scriptloader-support/*.js",
         "./useScriptLoader/*.js",
-        "./release/**",
       ],
       env: { node: true },
     },
