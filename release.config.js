@@ -1,6 +1,4 @@
-require("./release/create-github-prerelease");
 const { execSync } = require("child_process");
-const defaultReleaseRules = require("@semantic-release/commit-analyzer/lib/default-release-rules");
 
 const MAIN_BRANCH = "main";
 
@@ -42,7 +40,7 @@ const basePlugins = [
     "@semantic-release/commit-analyzer",
     {
       releaseRules: [
-        ...defaultReleaseRules,
+        { tag: "Upgrade", release: "patch" },
         { tag: "Refactor", release: "patch" },
         { tag: "Patch", release: "patch" },
       ],
@@ -76,22 +74,13 @@ const mainConfig = {
 const branchConfig = {
   plugins: [
     ...basePlugins,
-    {
-      name: "github-prerelease",
-      path: "./release",
-      successComment: `
-This PR is part of this prerelease version for testing: \${nextRelease.version}
-
-You can test it by using:
-\`\`\`bash
-npm install scriptloader-component@\${nextRelease.version}
-\`\`\`
-        `,
-      labels: false,
-      releasedLabels: false,
-      assets: "*.tgz",
-      debug: true,
-    },
+    [
+      "@semantic-release/exec",
+      {
+        successCmd:
+          'echo "NEXT_VERSION=${nextRelease.version}" >> $GITHUB_OUTPUT',
+      },
+    ],
   ],
 };
 
