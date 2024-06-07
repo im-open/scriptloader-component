@@ -1,3 +1,13 @@
+# [2.1.0](https://github.com/WTW-IM/scriptloader-component/compare/v2.0.3...v2.1.0) (2024-06-07)
+
+### New
+
+- supporting scriptAttributes ([e5ee7a1](https://github.com/WTW-IM/scriptloader-component/commit/e5ee7a10f915d00d6fa871e1123e02b9b3f6d1b3))
+
+### Upgrade
+
+- upgrading to latest semantic-release ([84f2838](https://github.com/WTW-IM/scriptloader-component/commit/84f28389941e23fbb040146e069bf46e74599837))
+
 ## [2.0.3](https://github.com/WTW-IM/scriptloader-component/compare/v2.0.2...v2.0.3) (2022-12-08)
 
 ### Fix
